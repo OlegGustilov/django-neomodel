@@ -112,9 +112,14 @@ class DjangoField(object):
 
         if self.choices:
             # Fields with choices get special treatment.
-            include_blank = not self.required or not (
-                self.has_default() or "initial" in kwargs
-            )
+            #include_blank = not self.required or not (
+            #    self.has_default() or "initial" in kwargs
+            #)
+
+            # - It should allow to set this from field options to avoid auto set blank field
+            # - It conflicts with existing rule when StringProperty with option "choices" can not use "required=True" and "default".
+            include_blank = False
+
             defaults["choices"] = self.get_choices(include_blank=include_blank)
             defaults["coerce"] = self.to_python
 
@@ -149,7 +154,9 @@ class DjangoField(object):
         choices = list(self.choices) if self.choices else []
 
         if issubclass(type(self.choices), dict):
-            choices = list(enumerate(self.choices))
+            #choices = list(self.choices.items())
+            # it should use original struct of items
+            choices = list(self.choices.items())
 
         for choice, __ in choices:
             if choice in ("", None):
