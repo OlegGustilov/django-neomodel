@@ -55,6 +55,7 @@ class DjangoField(object):
         self.attname = name
         self.verbose_name = name
         self.help_text = getattr(prop, "help_text", "")
+        self.widget = getattr(prop, 'widget', None)
 
         if isinstance(prop, UniqueIdProperty):
             # this seems that can be implemented in neomodel
@@ -105,6 +106,7 @@ class DjangoField(object):
             "required": self.required,
             "label": self.label or self.name,
             "help_text": self.help_text,
+            "widget": self.widget,
         }
 
         if self.has_default():
