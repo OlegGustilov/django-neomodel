@@ -220,8 +220,7 @@ class DjangoNode(StructuredNode, metaclass=MetaClass):
         for key, prop in self.__all_properties__:
             opts.add_field(DjangoField(prop, key), getattr(prop, "private", False))
             if getattr(prop, "primary_key", False):
-                self.pk = prop
-                self.pk.auto_created = True
+                self.pk = getattr(self, "pk", prop)
 
         return opts
 
